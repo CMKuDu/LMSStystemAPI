@@ -16,9 +16,10 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<ICouresRepository, CouresRepository>();
-builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+//builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+//builder.Services.AddScoped<ICouresRepository, CourseRepository>();
+//builder.Services.AddScoped<IDocumentRepository, DoscumentRepository>();
+
 
 var app = builder.Build();
 

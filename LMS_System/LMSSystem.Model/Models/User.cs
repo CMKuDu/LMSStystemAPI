@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LMS_System.LMSSystem.Model.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS_System.LMSSystym.Models.Models
@@ -14,6 +15,7 @@ namespace LMS_System.LMSSystym.Models.Models
         public int LocationId { set; get; }
         [ForeignKey("LocationId")]
         public Location? Location { set; get; }
+        public ICollection<User_Class>? User_Class { get; set; }
 
 
     }

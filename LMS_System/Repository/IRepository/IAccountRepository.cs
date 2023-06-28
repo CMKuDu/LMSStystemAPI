@@ -5,9 +5,11 @@ namespace LMS_System.Repository.IRepository
 {
     public interface IAccountRepository
     {
-        bool SaveChanges();
-        IEnumerable<Account> GetAll();
-        Account GetById(int id);
-        void Add(Account account);
+        public Task<List<AccountDTO>> GetAllAccount();
+        public Task<AccountDTO> GetByid(int id);
+        public Task<int> Post(AccountDTO model);
+        public Task Update(int id, AccountDTO model);
+        public Task Delete(int id);
+
     }
 }

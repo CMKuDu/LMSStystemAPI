@@ -1,39 +1,59 @@
-﻿using LMS_System.LMSSystym.Model.Data;
+﻿using AutoMapper;
+using LMS_System.LMSSystym.Model.Data;
+using LMS_System.LMSSystym.Model.DTOs;
 using LMS_System.LMSSystym.Models.Models;
 using LMS_System.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace LMS_System.Repository
 {
-    public class AccountRepository : IAccountRepository 
+    public class AccountRepository : IAccountRepository
     {
-        private readonly DataContext _context;
-        public AccountRepository(DataContext context)
+        private readonly DataContext _dataContext;
+        private readonly Mapper _mapper;
+        public AccountRepository(DataContext context, Mapper map)
         {
-            _context = context;
+            _dataContext = context;
+            _mapper = map;
         }
 
-        public void Add(Account account)
+        public async Task Delete(int id)
         {
-            if(account == null)
+            var acc = await _dataContext.Accounts.SingleOrDefaultAsync(x => x.AccountId == id);
+            if (acc != null)
             {
-                throw new ArgumentNullException(nameof(account));
+                _dataContext.Accounts.Remove(acc);
+                await _dataContext.SaveChangesAsync();
             }
-            _context.Accounts.Add(account);
         }
 
-        public IEnumerable<Account> GetAll()
+        public async Task<List<AccountDTO>> GetAllAccount()
         {
-            return _context.Accounts.ToList();
+            var acc = await _dataContext.Accounts.ToListAsync();
+            return _mapper.Map<List<AccountDTO>>(acc);
         }
 
-        public Account GetById(int id)
+        public async Task<AccountDTO> GetByid(int id)
         {
-            return _context.Accounts.FirstOrDefault(x => x.AccountId == id);
+            var acc = await _dataContext.Accounts.FindAsync(id);
+            return _mapper.Map<AccountDTO>(acc);
         }
 
-        public bool SaveChanges()
+        public async Task<int> Post(AccountDTO model)
         {
-            return (_context.SaveChanges() >= 0);
+            var acc = _mapper.Map<Account>(model);
+            _dataContext.Accounts.Add(acc);
+            return acc.AccountId;
+        }
+
+        public async Task Update(int id, AccountDTO model)
+        {
+            if(id == model.AccountId)
+            {
+                var acc = _mapper.Map<Account>(model);
+                _dataContext.Accounts.Update(acc);
+                await _dataContext.SaveChangesAsync();
+            }
         }
     }
 }

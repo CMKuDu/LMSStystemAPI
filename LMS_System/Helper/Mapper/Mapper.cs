@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using LMS_System.LMSSystem.Model.DTOs;
+using LMS_System.LMSSystem.Model.Models;
 using LMS_System.LMSSystym.Model.DTOs;
 using LMS_System.LMSSystym.Models.Models;
+using System.Security.Claims;
 
 namespace LMS_System.Helper.Mapper
 {
@@ -16,7 +19,8 @@ namespace LMS_System.Helper.Mapper
             CreateMap<PersionalDocument, PersionalDocumentDTO>().ReverseMap();
             CreateMap<Question, QuestionDTO>().ReverseMap();
             CreateMap<Roles, RoleDTO>().ReverseMap();
-            CreateMap<Subject, SubjectDTO>().ReverseMap();
+            CreateMap<Class, ClassDTO>().ReverseMap();
+            CreateMap<Anwser, AnwserDTO>().ReverseMap();
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using LMS_System.LMSSystym.Models.Models;
+﻿using LMS_System.LMSSystem.Model.Models;
+using LMS_System.LMSSystym.Models.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LMS_System.LMSSystym.Model.Data
@@ -19,7 +20,21 @@ namespace LMS_System.LMSSystym.Model.Data
         public DbSet<PersionalDocument> PersionalDocuments { get; set; }
         public DbSet<Question> Question { get; set; }
         public DbSet<Roles> Roles { get; set; }
-        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Class> Classes { get; set; }
+        public DbSet<Anwser> Anwsers { get; set; }
+        public DbSet<User_Class> User_Classes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User_Class>()
+                .HasKey(uc => new { uc.UserId, uc.ClassId });
+
+            modelBuilder.Entity<User_Class>()
+                .HasOne(uc => uc.User)
+                .WithMany(uc => uc.User_Class)
+                .HasForeignKey(uc => uc.UserId);
+            base.OnModelCreating(modelBuilder);
+        }
 
 
     }

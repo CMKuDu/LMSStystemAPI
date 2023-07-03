@@ -58,5 +58,12 @@ namespace LMS_System.Repository
             }
 
         }
+        public async Task<List<QuestionDTO>> GetQuestionByExam(int id)
+        {
+            var qs = _datacontext.Question
+                .Where(x => x.ExamId == id)
+                .ToListAsync();
+            return _mapper.Map<List<QuestionDTO>>(qs);
+        }
     }
 }

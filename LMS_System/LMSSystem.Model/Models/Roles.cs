@@ -9,5 +9,6 @@ namespace LMS_System.LMSSystym.Models.Models
         [Required]
         public string? RoleName { get; set; }
         public string? Descrepsion { get; set; }
+        public ICollection<User>? Users { get; set; }
     }
 }

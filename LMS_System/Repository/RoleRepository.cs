@@ -45,7 +45,8 @@ namespace LMS_System.Repository
         {
             var rl = _mapper.Map<Roles>(model);
             _datacontext.Roles.Add(rl);
-            return await _datacontext.SaveChangesAsync();
+            await _datacontext.SaveChangesAsync();
+            return rl.RolesId;
         }
 
         public async Task Update(RoleDTO model, int id)
@@ -56,6 +57,11 @@ namespace LMS_System.Repository
                 _datacontext.Roles.Update(rl);
                 await _datacontext.SaveChangesAsync();
             }
+        }
+        public async Task<RoleDTO> GetRoleNameFormRoleId(int id)
+        {
+            var rl = await _datacontext.Roles.FindAsync(id);
+            return _mapper.Map<RoleDTO>(rl);
         }
     }
 }

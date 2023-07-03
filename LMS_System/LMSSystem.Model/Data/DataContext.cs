@@ -26,6 +26,12 @@ namespace LMS_System.LMSSystym.Model.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Roles)
+                .WithMany(u => u.Users)
+                .HasForeignKey(u => u.RolesId)
+                .OnDelete(DeleteBehavior.Restrict); ;
+
             modelBuilder.Entity<User_Class>()
                 .HasKey(uc => new { uc.UserId, uc.ClassId });
 
@@ -33,6 +39,12 @@ namespace LMS_System.LMSSystym.Model.Data
                 .HasOne(uc => uc.User)
                 .WithMany(uc => uc.User_Class)
                 .HasForeignKey(uc => uc.UserId);
+
+            modelBuilder.Entity<Question>()
+                .HasOne(q => q.Exam)
+                .WithMany(e => e.Questions)
+                .HasForeignKey(q => q.ExamId);
+
             base.OnModelCreating(modelBuilder);
         }
 

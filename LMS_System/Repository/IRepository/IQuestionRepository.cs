@@ -9,5 +9,6 @@ namespace LMS_System.Repository.IRepository
         public Task Update(QuestionDTO model, int id);
         public Task Delete(int id);
         public Task<int> Post(QuestionDTO model);
+        public Task<List<QuestionDTO>> GetQuestionByExam(int id);
     }
 }

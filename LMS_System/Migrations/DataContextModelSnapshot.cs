@@ -36,12 +36,12 @@ namespace LMS_System.Migrations
                     b.Property<string>("AnwserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("QuesId")
+                    b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
                     b.HasKey("AnwserId");
 
-                    b.HasIndex("QuesId");
+                    b.HasIndex("QuestionId");
 
                     b.ToTable("Anwsers");
                 });
@@ -188,6 +188,9 @@ namespace LMS_System.Migrations
                     b.Property<string>("Answer")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
                     b.Property<string>("EmxamName")
                         .HasColumnType("nvarchar(max)");
 
@@ -272,6 +275,9 @@ namespace LMS_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionId"));
 
+                    b.Property<int?>("ExamId")
+                        .HasColumnType("int");
+
                     b.Property<string>("QuesName")
                         .HasColumnType("nvarchar(max)");
 
@@ -279,6 +285,8 @@ namespace LMS_System.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("QuestionId");
+
+                    b.HasIndex("ExamId");
 
                     b.ToTable("Question");
                 });
@@ -311,37 +319,64 @@ namespace LMS_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
+                    b.Property<DateTime?>("CreateAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
+                    b.Property<string>("PasswordResetToken")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RefreshTokenCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("RefreshTokenExpries")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ResetTokenExpries")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RolesId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Specialized")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("VerificationToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("VerifyAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("UserId");
 
-                    b.HasIndex("LocationId");
+                    b.HasIndex("RolesId");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("LMS_System.LMSSystem.Model.Models.Anwser", b =>
                 {
-                    b.HasOne("LMS_System.LMSSystym.Models.Models.Question", "QuestId")
-                        .WithMany()
-                        .HasForeignKey("QuesId")
+                    b.HasOne("LMS_System.LMSSystym.Models.Models.Question", "Question")
+                        .WithMany("Anwsers")
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("QuestId");
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("LMS_System.LMSSystem.Model.Models.User_Class", b =>
@@ -420,15 +455,39 @@ namespace LMS_System.Migrations
                     b.Navigation("Question");
                 });
 
+            modelBuilder.Entity("LMS_System.LMSSystym.Models.Models.Question", b =>
+                {
+                    b.HasOne("LMS_System.LMSSystym.Models.Models.Exam", "Exam")
+                        .WithMany("Questions")
+                        .HasForeignKey("ExamId");
+
+                    b.Navigation("Exam");
+                });
+
             modelBuilder.Entity("LMS_System.LMSSystym.Models.Models.User", b =>
                 {
-                    b.HasOne("LMS_System.LMSSystym.Models.Models.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("LMS_System.LMSSystym.Models.Models.Roles", "Roles")
+                        .WithMany("Users")
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Location");
+                    b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("LMS_System.LMSSystym.Models.Models.Exam", b =>
+                {
+                    b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("LMS_System.LMSSystym.Models.Models.Question", b =>
+                {
+                    b.Navigation("Anwsers");
+                });
+
+            modelBuilder.Entity("LMS_System.LMSSystym.Models.Models.Roles", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("LMS_System.LMSSystym.Models.Models.User", b =>

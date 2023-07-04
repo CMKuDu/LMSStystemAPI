@@ -42,7 +42,7 @@ namespace LMS_System.Controllers
                 Data = null,
             });
         }
-        [HttpPut("{ikd}"), Authorize (Roles = "Admin")]
+        [HttpPut("{id}"), Authorize (Roles = "Admin")]
         public async Task<IActionResult>Update(int id, ExamDTO model)
         {
             if(id != model.EmxamId)

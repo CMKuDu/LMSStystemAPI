@@ -1,5 +1,6 @@
 ﻿using LMS_System.LMSSystym.Model.DTOs;
 using LMS_System.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,7 @@ namespace LMS_System.Controllers
             await _roleRepo.Update(model, id);
             return Ok();
         }
+        [HttpDelete, Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _roleRepo.DeleteRole(id);

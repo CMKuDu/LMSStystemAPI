@@ -25,10 +25,10 @@ namespace LMS_System.Controllers
                 Success = true,
                 Message = "Successfuly",
                 Data = doc,
-            }); 
+            });
         }
-        [HttpGet("{id}"), Authorize(Roles ="Admin")]
-                public async Task<IActionResult> GetDocById(int id)
+        [HttpGet("{id}"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetDocById(int id)
         {
             var doc = await _docRepo.GetDocsByid(id);
             if (id != null)
@@ -66,6 +66,7 @@ namespace LMS_System.Controllers
             await _docRepo.Delete(id);
             return Ok();
         }
+        [HttpPost, Authorize(Roles ="Admin")] 
         public async Task<IActionResult> Post(DocumentDTO model)
         {
             int doc = await _docRepo.PostDocs(model);

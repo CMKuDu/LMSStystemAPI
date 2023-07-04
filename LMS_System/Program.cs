@@ -27,13 +27,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program));
 
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IEmailRepository, EmailRepository>();
-builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-//builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IAnwserRepository, AnwserRepository>();
 builder.Services.AddScoped<ICouresRepository, CourseRepository>();
 builder.Services.AddScoped<IDocumentRepository, DoscumentRepository>();
+builder.Services.AddScoped<IExamRepository, ExamRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 
+//builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 builder.Services.AddSwaggerGen(options =>
 {

@@ -61,5 +61,25 @@ namespace LMS_System.Controllers
             await _noRepo.Delete(id);
             return Ok();
         }
+        [HttpPost]
+        public async Task<IActionResult>Post(NotificationDTO model)
+        {
+            int noId = await _noRepo.Post(model);
+            if(noId != -1)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Successfuly",
+                    Data = model
+                });
+            }
+            return BadRequest(new ApiResponse
+            {
+                Success = false,
+                Message = "Successfuly",
+                Data = null
+            });
+        }
     }
 }

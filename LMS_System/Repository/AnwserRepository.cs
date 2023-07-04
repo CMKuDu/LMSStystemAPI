@@ -10,8 +10,8 @@ namespace LMS_System.Repository
     public class AnwserRepository : IAnwserRepository
     {
         private readonly DataContext _datacontext;
-        private readonly Mapper _mapper;
-        public AnwserRepository(DataContext datacontext, Mapper mapper)
+        private readonly IMapper _mapper;
+        public AnwserRepository(DataContext datacontext, IMapper mapper)
         {
             _datacontext = datacontext;
             _mapper = mapper;

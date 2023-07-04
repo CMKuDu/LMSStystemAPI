@@ -8,7 +8,7 @@ namespace LMS_System.Repository.IRepository
         public Task<List<UserDTO>> GetAllUser();
         public Task<List<UserDTO>> GetAllUserByRoleId(int id);
         public Task<UserDTO> GetUserByIt(int id);
-        public Task Update(UserDTO model, int id);
+        public Task UpdateUserAsync(UserDTO model, int id);
         public Task<int> Post(UserDTO model);
         public Task<UserDTO> Login(string userName, string password);
         Task<bool> CheckUserName(string username);

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LMS_System.Helper;
+using LMS_System.LMSSystem.Model.DTOs;
 using LMS_System.LMSSystym.Model.DTOs;
 using LMS_System.LMSSystym.Models.Models;
 using LMS_System.Prototypes;
@@ -7,6 +8,7 @@ using LMS_System.Repository.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LMS_System.Controllers
 {
@@ -47,7 +49,7 @@ namespace LMS_System.Controllers
                 {
                     TotalUser = totalUser,
                     Page = page,
-                    pageSize = pageSize,
+                    PageSize = pageSize,
                     ToltalPage = totalPage
                 };
                 return Ok(new { User = paginatedUsers, Pagination = paginationInfo });
@@ -58,12 +60,12 @@ namespace LMS_System.Controllers
             }
         }
         [HttpGet("role/{rolesId}"), Authorize(Roles = "Admin ")]
-        public async Task<IActionResult> GetAllUserByRoles(int roleId,int page =1, int pageSize =10,string ? key = null)
+        public async Task<IActionResult> GetAllUserByRoles(int roleId, int page = 1, int pageSize = 10, string? key = null)
         {
             try
             {
                 var allUs = await _userRepo.GetAllUserByRoleId(roleId);
-                if(!string.IsNullOrEmpty(key))
+                if (!string.IsNullOrEmpty(key))
                 {
                     allUs = allUs.Where(x => x.Name.Contains(key) || x.Email.Contains(key)).ToList();
                 }
@@ -92,25 +94,49 @@ namespace LMS_System.Controllers
             return allUsId == null ? NotFound() : Ok(allUsId);
         }
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(string email, string userName,string password)
+        //public async Task<IActionResult> Register(UserDTO model)
+        //{
+        //    int userId = await _userRepo.Post(model);
+        //    if (userId != -1)
+        //    {
+        //        return Ok(new ApiResponse
+        //        {
+        //            Success = true,
+        //            Message = "Register success",
+        //            Data = userId
+        //        });
+        //    }
+        //    else
+        //    {
+        //        // Đăng ký không thành công do trùng email hoặc username
+        //        return BadRequest(new ApiResponse
+        //        {
+        //            Success = false,
+        //            Message = "Register fail: The user already exists",
+        //            Data = null
+        //        });
+        //    }
+        //}   
+        public async Task<IActionResult> Register(string email, string userName, string password)
         {
             _logger.LogInformation("Create new a User");
             try
             {
                 var nus = new UserDTO
                 {
-                    Email = email,
+                    Email = email.Trim().ToLower(),
                     Username = userName,
                     Password = password,
+                    IsActive = true,
                     VerificationToken = jwtHandler.CreateRandomToken()
                 };
-                if(await _userRepo.Post(nus) != -1)
+                if (await _userRepo.Post(nus) != -1)
                 {
                     return Ok(new ApiResponse
                     {
                         Success = true,
                         Message = "Register success",
-                        Data = CreatedAtAction(nameof(GetUserById),new {id = nus.UserID},nus)
+                        Data = CreatedAtAction(nameof(GetUserById), new { id = nus.UserID }, nus)
                     });
                 }
                 else
@@ -123,7 +149,7 @@ namespace LMS_System.Controllers
                     });
                 }
             }
-            catch(System.Exception e)
+            catch (System.Exception e)
             {
                 return BadRequest(new ApiResponse
                 {
@@ -133,8 +159,9 @@ namespace LMS_System.Controllers
                 });
             }
         }
+
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(string username,string password)
+        public async Task<IActionResult> Login(string username, string password)
         {
             GenerateToken tokenGenera = new GenerateToken(_configuration, _roleRepo);
 
@@ -179,6 +206,78 @@ namespace LMS_System.Controllers
                 return BadRequest();
             }
         }
-        
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDTO model)
+        {
+            if (id != model.UserID)
+            {
+                return NotFound();
+            }
+            await _userRepo.UpdateUserAsync(model, id);
+            return Ok();
+        }
+        [HttpPost("verify"), Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Verify(string token)
+        {
+            if (await _userRepo.VerifyEmail(token) != -1)
+            {
+                return Ok("User is Verify");
+            }
+            else
+            {
+                return BadRequest("Invalid token");
+            }
+        }
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<string>> RefreshToken()
+        {
+            GenerateToken tokenGenerate = new GenerateToken(_configuration, _roleRepo);
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            var us = await _userRepo.GetUserByRefreshToken(refreshToken);
+            if (us == null)
+            {
+                return Unauthorized("Invalid Refresh Toekn");
+            }
+            else if (us.RefreshTokenExpries < DateTime.Now)
+            {
+                return Unauthorized("Token expries");
+            }
+            string token = await tokenGenerate.CreateToken(us);
+            var newRefreshToken = GenerateRefreshToken.CreateRefeshToken();
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = newRefreshToken.Expires,
+            };
+            Response.Cookies.Append("refreshToken", newRefreshToken.Token, cookieOptions);
+            await _userRepo.SetRefreshToken(us.UserID, newRefreshToken);
+            return Ok(token);
+        }
+        [HttpPost("forot-password")]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            if (await _userRepo.ForgotPassword(email) != -1)
+            {
+                return Ok("succes");
+            }
+            else
+            {
+
+                return BadRequest();
+            }
+        }
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
+        {
+            if (await _userRepo.ResetPassword(request.Token, request.Password) != -1)
+            {
+                return Ok("Password succesfully reset");
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }

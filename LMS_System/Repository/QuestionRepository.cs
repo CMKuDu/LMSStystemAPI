@@ -10,8 +10,8 @@ namespace LMS_System.Repository
     public class QuestionRepository : IQuestionRepository
     {
         private readonly DataContext _datacontext;
-        private readonly Mapper _mapper;
-        public QuestionRepository(DataContext datacontext, Mapper mapper)
+        private readonly IMapper _mapper;
+        public QuestionRepository(DataContext datacontext, IMapper mapper)
         {
             _datacontext = datacontext;
             _mapper = mapper;

@@ -11,8 +11,8 @@ namespace LMS_System.Repository
     public class DoscumentRepository : IDocumentRepository
     {
         private readonly DataContext _dataContext;
-        private readonly Mapper _mapper;
-        public DoscumentRepository(DataContext dataContext, Mapper mapper)
+        private readonly IMapper _mapper;
+        public DoscumentRepository(DataContext dataContext, IMapper mapper)
         {
             _dataContext = dataContext;
             _mapper = mapper;

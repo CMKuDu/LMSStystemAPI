@@ -10,8 +10,8 @@ namespace LMS_System.Repository
     public class NotificationRepository : INotificationRepository
     {
         private readonly DataContext _datacontext;
-        private readonly Mapper _mapper;
-        public NotificationRepository(DataContext context, Mapper mapper)
+        private readonly IMapper _mapper;
+        public NotificationRepository(DataContext context, IMapper mapper)
         {
             _datacontext = context;
             _mapper = mapper;

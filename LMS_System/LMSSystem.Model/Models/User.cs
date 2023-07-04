@@ -18,6 +18,7 @@ namespace LMS_System.LMSSystym.Models.Models
         public string? Phone { set; get; }
         public string? Specialized { set; get; }
         public string? Password { get; set; }
+        public bool IsActive { get; set; }
         public string? PasswordResetToken { get; set; }
 
         public DateTime? ResetTokenExpries { get; set; }

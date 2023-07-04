@@ -21,9 +21,9 @@ namespace LMS_System.Helper
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Name),
-                new Claim("Role", user.RoleId.ToString()),  
+                new Claim("Roles", user.RoleID.ToString()),  
             };
-            RoleDTO roleDTO = await _roleRepository.GetRoleById(user.RoleId);
+            RoleDTO roleDTO = await _roleRepository.GetRoleById(user.RoleID);
             string roleName = roleDTO.RoleName;
             if(!string.IsNullOrEmpty(roleName))
             {

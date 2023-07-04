@@ -1,6 +1,6 @@
 ﻿namespace LMS_System.LMSSystem.Model.DTOs
 {
-    public class LogoDTO
+    public class LoginDTO
     {
         public string? username { get; set; }
         public string? password { get; set; }

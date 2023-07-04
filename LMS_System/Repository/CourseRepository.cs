@@ -10,8 +10,8 @@ namespace LMS_System.Repository
     public class CourseRepository : ICouresRepository
     {
         private readonly DataContext _dataContext;
-        private readonly Mapper _mapper;
-        public CourseRepository(DataContext context, Mapper map)
+        private readonly IMapper _mapper;
+        public CourseRepository(DataContext context, IMapper map)
         {
             _dataContext = context;
             _mapper = map;

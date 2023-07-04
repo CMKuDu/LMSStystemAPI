@@ -21,6 +21,7 @@ namespace LMS_System.Helper
             CreateMap<Anwser, AnwserDTO>().ReverseMap();
             CreateMap<Class, ClassesDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, LoginDTO>().ReverseMap();
         }
     }
 }

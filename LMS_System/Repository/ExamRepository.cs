@@ -11,8 +11,8 @@ namespace LMS_System.Repository
     {
         private readonly DataContext _datecontext;
 
-        private readonly Mapper _mapper;
-        public ExamRepository(DataContext datacontext, Mapper mapper)
+        private readonly IMapper _mapper;
+        public ExamRepository(DataContext datacontext, IMapper mapper)
         {
             _datecontext = datacontext;
             _mapper = mapper;

@@ -33,7 +33,7 @@ namespace LMS_System.Repository
         public async Task Delete(int id)
         {
             var us = _datacontext.Users.FirstOrDefault(x => x.UserId == id);
-            if(us != null)
+            if (us != null)
             {
                 _mapper.Map<UserDTO>(us);
                 await _datacontext.SaveChangesAsync();
@@ -43,7 +43,7 @@ namespace LMS_System.Repository
         public async Task<int> ForgotPassword(string email)
         {
             var us = await _datacontext.Users.FirstOrDefaultAsync(x => x.Email == email);
-            if(us == null)
+            if (us == null)
             {
                 return -1;
             }
@@ -63,7 +63,7 @@ namespace LMS_System.Repository
         public async Task<List<UserDTO>> GetAllUser()
         {
             var us = await _datacontext.Users.ToListAsync();
-           return _mapper.Map<List<UserDTO>>(us);
+            return _mapper.Map<List<UserDTO>>(us);
         }
 
         public async Task<List<UserDTO>> GetAllUserByRoleId(int id)
@@ -83,7 +83,7 @@ namespace LMS_System.Repository
         public async Task<UserDTO> GetUserByRefreshToken(string refreshToken)
         {
             var us = await _datacontext.Users.FirstOrDefaultAsync(x => x.RefreshToken == refreshToken);
-            if(us == null)
+            if (us == null)
             {
                 return null;
             }
@@ -93,11 +93,11 @@ namespace LMS_System.Repository
         public async Task<UserDTO> Login(string userName, string password)
         {
             var us = await _datacontext.Users.SingleOrDefaultAsync(x => x.UserName == userName);
-            if(us == null)
+            if (us == null)
             {
                 return null;
             }
-            if(password == null)
+            if (password == null)
             {
                 return null;
             }
@@ -107,23 +107,23 @@ namespace LMS_System.Repository
         public async Task<int> Post(UserDTO model)
         {
             var us = _mapper.Map<User>(model);
-            if ( await _datacontext.Users.CountAsync(x => x.Email == model.Email) > 0)
+            if (await _datacontext.Users.CountAsync(x => x.Email == model.Email) > 0)
             {
                 return -1;
-            }
+            } 
             if (await _datacontext.Users.CountAsync(x => x.UserName == model.Username) > 0)
             {
                 return -1;
             }
             var passwordHash = HashMD5.GetMD5Hash(model.Password);
             us.Password = passwordHash;
+            us.IsActive = true;
             us.RolesId = 1;
             us.VerificationToken = jwtHandler.CreateRandomToken();
-            _datacontext.Add(us);
+             _datacontext.Add(us);
             await _datacontext.SaveChangesAsync();
-
             return us.UserId;
-            
+
         }
 
         public async Task<int> ResetPassword(string token, string password)
@@ -147,7 +147,7 @@ namespace LMS_System.Repository
         public async Task SetRefreshToken(int userId, RefreshToken newRefreshToken)
         {
             var us = await _datacontext.Users.FindAsync(userId);
-            if(userId != null)
+            if (userId != null)
             {
                 us.RefreshToken = newRefreshToken.Token;
                 us.RefreshTokenCreated = newRefreshToken.Created;
@@ -156,9 +156,9 @@ namespace LMS_System.Repository
             }
         }
 
-        public async Task Update(UserDTO model, int id)
+        public async Task UpdateUserAsync(UserDTO model, int id)
         {
-            if(id == model.UserID)
+            if (id == model.UserID)
             {
                 var us = _mapper.Map<User>(model);
                 _datacontext.Users!.Update(us);
@@ -169,7 +169,7 @@ namespace LMS_System.Repository
         public async Task<int> VerifyEmail(string token)
         {
             var us = await _datacontext.Users.FirstOrDefaultAsync(x => x.VerificationToken == token);
-            if(us == null)
+            if (us == null)
             {
                 return -1;
             }
